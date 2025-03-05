@@ -7,6 +7,7 @@ import com.ruoyi.project.business.charge.service.ProtocolToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,7 +24,7 @@ public class ProtocolToolServiceImpl implements ProtocolToolService {
     private MiaochongchongProtocolToolHelper miaochongchongProtocolToolHelper;
 
     @Override
-    public Map<String,Object> parse(Integer protocol, Integer frame, String data) {
+    public List<ChargeFrameVo> parse(Integer protocol, Integer frame, String data) {
 
         if(ChargeProtocolEnum.MIAO_CHONG_CHONG.getCode().equals(protocol)){
             return miaochongchongProtocolToolHelper.parse(frame, data);

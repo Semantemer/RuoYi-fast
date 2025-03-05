@@ -39,7 +39,7 @@ public class ProtocolToolController {
     @Anonymous
     @RequestMapping("/parse/{protocol}/{frame}/{data}")
     @ResponseBody
-    public Map<String,Object> parse(@PathVariable Integer protocol, @PathVariable Integer frame, @PathVariable String data)
+    public List<ChargeFrameVo> parse(@PathVariable Integer protocol, @PathVariable Integer frame, @PathVariable String data)
     {
 
         return protocolToolService.parse(protocol, frame, data);

@@ -2,10 +2,15 @@ package com.ruoyi.project.business.charge.helper;
 
 import com.ruoyi.project.business.charge.domain.ChargeFrameVo;
 import com.ruoyi.project.business.charge.enums.ChargeFrameEnum;
+import com.ruoyi.project.business.charge.utils.CP56Time2aUtil;
+import com.ruoyi.project.business.charge.utils.DateUtil;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * @ClassName: MiaochongchongProtocolToolHelper
@@ -16,7 +21,7 @@ import java.util.Map;
  **/
 @Component
 public class MiaochongchongProtocolToolHelper {
-    public Map<String,Object> parse(Integer frame, String data) {
+    public List<ChargeFrameVo> parse(Integer frame, String data) {
 
         Integer frameType = Integer.parseInt(data.substring(11, 12), 16);
 
@@ -31,7 +36,7 @@ public class MiaochongchongProtocolToolHelper {
      * 交易记录
      * 充电桩->运营平台
      */
-    private Map<String,Object> parseTradingRecord(String data) {
+    private List<ChargeFrameVo> parseTradingRecord(String data) {
 
         // 68a2770600
         // 3b
@@ -68,33 +73,27 @@ public class MiaochongchongProtocolToolHelper {
         // 7805af3703000000
         // d303
 
-        Map<String,Object> result = new HashMap<>();
-        result.put("帧类型", "交易记录");
+        List<ChargeFrameVo> result = new ArrayList<>();
+        result.add(new ChargeFrameVo("帧类型", "交易记录"));
 
-        String orderNo = data.substring(12, 44);
-        result.put("交易流水号", orderNo);
+        result.add(new ChargeFrameVo("交易流水号", data.substring(12, 44)));
+        result.add(new ChargeFrameVo("桩编号", data.substring(44, 58)));
+        result.add(new ChargeFrameVo("枪编号", data.substring(58, 60)));
 
-        String pileNo = data.substring(44, 58);
-        result.put("桩编号", pileNo);
-
-        String gunNo = data.substring(58, 60);
-        result.put("枪编号", gunNo);
-
-        String startTime = data.substring(60, 74);
-        result.put("开始充电时间", startTime);
-
-        String endTime = data.substring(74, 88);
-        result.put("结束充电时间", endTime);
+        result.add(new ChargeFrameVo("开始充电时间",DateUtil.localDateTime2Str(CP56Time2aUtil.parseCP56Time2a(data.substring(60, 74)))));
+        result.add(new ChargeFrameVo("结束充电时间",DateUtil.localDateTime2Str(CP56Time2aUtil.parseCP56Time2a(data.substring(74, 88)))));
 
         return result;
     }
 
+
+
     public static void main(String[] args) {
 
 
-        String data = "68a27706003b00124120001903012501140540370001001241200019030120cb3417ed011978e618072e0119d0070000000000000000000000000000d0070000000000000000000000000000d0070000000000000000000000000000d007000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009000019072e01194a7805af3703000000d303";
-        String orderNo = data.substring(12, 44);
-        System.out.println(orderNo);
+        // 输入的16进制字符串
+        String hexString = "20cb3417ed0119";
+        System.out.println("输入的16进制字符串: " + hexString);
 
     }
 
