@@ -7,6 +7,7 @@ import com.ruoyi.project.business.charge.service.ProtocolToolService;
 import com.ruoyi.project.business.nav.domain.NavConfig;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ import static com.ruoyi.common.utils.PageUtils.startPage;
 @RequestMapping("/business/charge/protocolTool")
 public class ProtocolToolController {
 
+    @Autowired
     private ProtocolToolService protocolToolService;
 
     /**

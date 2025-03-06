@@ -23,7 +23,7 @@ import java.util.*;
 public class MiaochongchongProtocolToolHelper {
     public List<ChargeFrameVo> parse(Integer frame, String data) {
 
-        Integer frameType = Integer.parseInt(data.substring(11, 12), 16);
+        Integer frameType = Integer.parseInt(data.substring(10, 12), 16);
 
         if(ChargeFrameEnum.TRADING_RECORD.getCode().equals(frameType)){
             return parseTradingRecord(data);
@@ -83,18 +83,39 @@ public class MiaochongchongProtocolToolHelper {
         result.add(new ChargeFrameVo("开始充电时间",DateUtil.localDateTime2Str(CP56Time2aUtil.parseCP56Time2a(data.substring(60, 74)))));
         result.add(new ChargeFrameVo("结束充电时间",DateUtil.localDateTime2Str(CP56Time2aUtil.parseCP56Time2a(data.substring(74, 88)))));
 
+        result.add(new ChargeFrameVo("尖单价", data.substring(88, 96)));
+        result.add(new ChargeFrameVo("尖电量", data.substring(96, 104)));
+        result.add(new ChargeFrameVo("计损尖电量", data.substring(104, 112)));
+        result.add(new ChargeFrameVo("尖金额", data.substring(112, 120)));
+
+        result.add(new ChargeFrameVo("峰单价", data.substring(120, 128)));
+        result.add(new ChargeFrameVo("峰电量", data.substring(128, 136)));
+        result.add(new ChargeFrameVo("计损峰电量", data.substring(136, 144)));
+        result.add(new ChargeFrameVo("峰金额", data.substring(144, 152)));
+
+        result.add(new ChargeFrameVo("平单价", data.substring(152, 160)));
+        result.add(new ChargeFrameVo("平电量", data.substring(160, 168)));
+        result.add(new ChargeFrameVo("计损平电量", data.substring(168, 176)));
+        result.add(new ChargeFrameVo("平金额", data.substring(176, 184)));
+
+        result.add(new ChargeFrameVo("谷单价", data.substring(184, 192)));
+        result.add(new ChargeFrameVo("谷电量", data.substring(192, 200)));
+        result.add(new ChargeFrameVo("计损谷电量", data.substring(200, 208)));
+        result.add(new ChargeFrameVo("谷金额", data.substring(208, 218)));
+
+        result.add(new ChargeFrameVo("电表总起值", data.substring(218, 228)));
+        result.add(new ChargeFrameVo("电表总止值", data.substring(228, 236)));
+
+        result.add(new ChargeFrameVo("总电量", data.substring(236, 244)));
+        result.add(new ChargeFrameVo("计损总电量", data.substring(244, 252)));
+        result.add(new ChargeFrameVo("消费金额", data.substring(252, 260)));
+
+        result.add(new ChargeFrameVo("电动汽车唯一标识", data.substring(260, 294)));
+        result.add(new ChargeFrameVo("交易标识", data.substring(294, 296)));
+        result.add(new ChargeFrameVo("交易日期、时", data.substring(296, 310)));
+        result.add(new ChargeFrameVo("停止原因", data.substring(310, 312)));
+
         return result;
-    }
-
-
-
-    public static void main(String[] args) {
-
-
-        // 输入的16进制字符串
-        String hexString = "20cb3417ed0119";
-        System.out.println("输入的16进制字符串: " + hexString);
-
     }
 
 }
