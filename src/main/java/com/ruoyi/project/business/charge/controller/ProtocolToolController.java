@@ -39,7 +39,6 @@ public class ProtocolToolController {
      * 根据协议解析指定帧数据
      */
     @ApiOperation("根据协议解析指定帧数据")
-    @Anonymous
     @RequestMapping("/parse/{protocol}/{data}")
     @ResponseBody
     public List<ChargeFrameVo> parse(@PathVariable Integer protocol, @PathVariable String data)
