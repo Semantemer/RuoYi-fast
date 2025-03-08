@@ -24,10 +24,10 @@ public class ProtocolToolServiceImpl implements ProtocolToolService {
     private MiaochongchongProtocolToolHelper miaochongchongProtocolToolHelper;
 
     @Override
-    public List<ChargeFrameVo> parse(Integer protocol, Integer frame, String data) {
+    public List<ChargeFrameVo> parse(Integer protocol, String data) {
 
         if(ChargeProtocolEnum.MIAO_CHONG_CHONG.getCode().equals(protocol)){
-            return miaochongchongProtocolToolHelper.parse(frame, data);
+            return miaochongchongProtocolToolHelper.parse(data);
         }
 
         return null;

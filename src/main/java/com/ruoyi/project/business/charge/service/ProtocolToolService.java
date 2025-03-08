@@ -6,5 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface ProtocolToolService {
-    List<ChargeFrameVo> parse(Integer protocol, Integer frame, String data);
+
+    List<ChargeFrameVo> parse(Integer protocol, String data);
 }

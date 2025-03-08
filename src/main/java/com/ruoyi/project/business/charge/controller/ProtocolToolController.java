@@ -29,6 +29,7 @@ import static com.ruoyi.common.utils.PageUtils.startPage;
 @ApiOperation("协议解析工具")
 @Controller
 @RequestMapping("/business/charge/protocolTool")
+@Anonymous
 public class ProtocolToolController {
 
     @Autowired
@@ -39,11 +40,11 @@ public class ProtocolToolController {
      */
     @ApiOperation("根据协议解析指定帧数据")
     @Anonymous
-    @RequestMapping("/parse/{protocol}/{frame}/{data}")
+    @RequestMapping("/parse/{protocol}/{data}")
     @ResponseBody
-    public List<ChargeFrameVo> parse(@PathVariable Integer protocol, @PathVariable Integer frame, @PathVariable String data)
+    public List<ChargeFrameVo> parse(@PathVariable Integer protocol, @PathVariable String data)
     {
 
-        return protocolToolService.parse(protocol, frame, data);
+        return protocolToolService.parse(protocol, data);
     }
 }

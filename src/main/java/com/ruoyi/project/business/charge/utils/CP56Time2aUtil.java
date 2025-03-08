@@ -47,7 +47,7 @@ public class CP56Time2aUtil {
         }
 
         // 提取毫秒值（前两个字节）
-        int millis = ((data[0] & 0xFF) << 8) | (data[1] & 0xFF);
+        int millis = ((data[1] & 0xFF) << 8) | (data[0] & 0xFF);
 
         // 提取分钟、小时、日、月、年
         int minute = data[2] & 0x3F; // 取低6位
@@ -62,4 +62,5 @@ public class CP56Time2aUtil {
 
         return LocalDateTime.of(year, month, day, hour, minute, seconds, nanos);
     }
+
 }

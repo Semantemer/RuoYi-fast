@@ -3,6 +3,7 @@ package com.ruoyi.project.business.charge.helper;
 import com.ruoyi.project.business.charge.domain.ChargeFrameVo;
 import com.ruoyi.project.business.charge.enums.ChargeFrameEnum;
 import com.ruoyi.project.business.charge.utils.CP56Time2aUtil;
+import com.ruoyi.project.business.charge.utils.FrameParseUtil;
 import com.ruoyi.project.business.charge.utils.DateUtil;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ import java.util.*;
  **/
 @Component
 public class MiaochongchongProtocolToolHelper {
-    public List<ChargeFrameVo> parse(Integer frame, String data) {
+    public List<ChargeFrameVo> parse(String data) {
 
         Integer frameType = Integer.parseInt(data.substring(10, 12), 16);
 
@@ -106,13 +107,13 @@ public class MiaochongchongProtocolToolHelper {
         result.add(new ChargeFrameVo("电表总起值", data.substring(218, 228)));
         result.add(new ChargeFrameVo("电表总止值", data.substring(228, 236)));
 
-        result.add(new ChargeFrameVo("总电量", data.substring(236, 244)));
-        result.add(new ChargeFrameVo("计损总电量", data.substring(244, 252)));
-        result.add(new ChargeFrameVo("消费金额", data.substring(252, 260)));
+        result.add(new ChargeFrameVo("总电量", FrameParseUtil.bytesParseFor4(data.substring(236, 244))));
+        result.add(new ChargeFrameVo("计损总电量", FrameParseUtil.bytesParseFor4(data.substring(244, 252))));
+        result.add(new ChargeFrameVo("消费金额", FrameParseUtil.bytesParseFor4(data.substring(252, 260))));
 
         result.add(new ChargeFrameVo("电动汽车唯一标识", data.substring(260, 294)));
         result.add(new ChargeFrameVo("交易标识", data.substring(294, 296)));
-        result.add(new ChargeFrameVo("交易日期、时", data.substring(296, 310)));
+        result.add(new ChargeFrameVo("交易日期、时", DateUtil.localDateTime2Str(CP56Time2aUtil.parseCP56Time2a(data.substring(296, 310)))));
         result.add(new ChargeFrameVo("停止原因", data.substring(310, 312)));
 
         return result;
