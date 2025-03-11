@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -39,9 +40,9 @@ public class ProtocolToolController {
      * 根据协议解析指定帧数据
      */
     @ApiOperation("根据协议解析指定帧数据")
-    @RequestMapping("/parse/{protocol}/{data}")
+    @RequestMapping("/parse")
     @ResponseBody
-    public List<ChargeFrameVo> parse(@PathVariable Integer protocol, @PathVariable String data)
+    public List<ChargeFrameVo> parse(@RequestParam Integer protocol, @RequestParam String data)
     {
 
         return protocolToolService.parse(protocol, data);
