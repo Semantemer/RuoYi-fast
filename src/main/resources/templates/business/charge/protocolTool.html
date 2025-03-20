@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>充电桩帧数据解析</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>充电桩帧数据解析</h1>
+        <p>请选择协议类型：</p>
+        <select id="protocolType">
+            <option value="1">喵充充</option>
+            <!-- 如果有其他协议类型，可以继续添加选项 -->
+        </select>
+        <p>请输入帧数据：</p>
+        <input type="text" id="protocolData" placeholder="请输入帧数据">
+        <button onclick="sendRequest()">发送请求</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        async function sendRequest() {
+            const protocolType = document.getElementById('protocolType').value;
+            const protocolData = document.getElementById('protocolData').value;
+            const apiUrl = `https://www.semanteme.top/api/business/charge/protocolTool/parse?protocol=${protocolType}&data=${protocolData}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('result').innerText = `请求失败: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
