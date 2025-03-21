@@ -25,4 +25,32 @@ public class FrameParseUtil {
         return valueBigDecimal.toString();
     }
 
+    public static String bytesParseFor2(String hexString) {
+
+        byte[] data = HexConverterUtil.hexStringToByteArray(hexString);
+
+        if (data.length != 2) {
+            throw new IllegalArgumentException("Invalid totalPower data length. Expected 2 bytes.");
+        }
+
+        // 提取毫秒值（前两个字节）
+        int value = ((data[1] & 0xFF) << 8) | (data[0] & 0xFF);
+        BigDecimal valueBigDecimal = new BigDecimal(value).divide(new BigDecimal(10)).setScale(1, BigDecimal.ROUND_HALF_UP);
+        return valueBigDecimal.toString();
+    }
+
+    public static String bytesParseFor1(String hexString) {
+
+        byte[] data = HexConverterUtil.hexStringToByteArray(hexString);
+
+        if (data.length != 1) {
+            throw new IllegalArgumentException("Invalid totalPower data length. Expected 2 bytes.");
+        }
+
+        // 提取毫秒值（前两个字节）
+        int value = (data[0] & 0xFF);
+        BigDecimal valueBigDecimal = new BigDecimal(value);
+        return valueBigDecimal.toString();
+    }
+
 }

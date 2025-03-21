@@ -28,9 +28,74 @@ public class MiaochongchongProtocolToolHelper {
 
         if(ChargeFrameEnum.TRADING_RECORD.getCode().equals(frameType)){
             return parseTradingRecord(data);
+        }else if(ChargeFrameEnum.PILE_REALTIME_DATA.getCode().equals(frameType)){
+            return parsePileRealtimeData(data);
         }
 
         return null;
+    }
+
+    private List<ChargeFrameVo> parsePileRealtimeData(String data) {
+        // 6840216f00
+        // 13
+        // 00725020006901012503202328050001 : 流水号
+        // 00725020006901 : 桩编号
+        // 01 : 枪编号
+        // 03 : 状态（0x00：离线 0x01：故障 0x02：空闲 0x03：充电）
+        // 02 : 枪是否归位（0x00否 0x01是 0x02未知）
+        // 01 : 是否插枪（0x00 否 0x01是）
+        // 5f08 : 输出电压
+        // 3e01 : 输出电流
+        // 59 : 枪线温度
+        // 0000000000000000 : 枪线编码
+        // 00 : SOC（待机置零；交流桩置零）
+        // 00 : 电池组最高温度
+        // 2800 : 累计充电时间
+        // 0000 : 剩余时间
+        // 8fb40000 : 充电度数
+        // 8fb40000 : 计损充电度数
+        // 8fb40000 : 已充金额
+        // 0000 : 硬件故障
+        // e494
+
+        List<ChargeFrameVo> result = new ArrayList<>();
+        result.add(new ChargeFrameVo("帧类型", ChargeFrameEnum.PILE_REALTIME_DATA.getMessage()));
+
+        result.add(new ChargeFrameVo("交易流水号", data.substring(12, 44)));
+        result.add(new ChargeFrameVo("桩编号", data.substring(44, 58)));
+        result.add(new ChargeFrameVo("枪编号", data.substring(58, 60)));
+        result.add(new ChargeFrameVo("状态（0x00：离线 0x01：故障 0x02：空闲 0x03：充电）", data.substring(60, 62)));
+        result.add(new ChargeFrameVo("枪是否归位（0x00否 0x01是 0x02未知）", data.substring(62, 64)));
+        result.add(new ChargeFrameVo("是否插枪（0x00 否 0x01是）", data.substring(64, 66)));
+
+        result.add(new ChargeFrameVo("输出电压", FrameParseUtil.bytesParseFor2(data.substring(66, 70))));
+        result.add(new ChargeFrameVo("输出电流", FrameParseUtil.bytesParseFor2(data.substring(70, 74))));
+
+        result.add(new ChargeFrameVo("枪线温度", FrameParseUtil.bytesParseFor1(data.substring(74, 76))));
+        result.add(new ChargeFrameVo("枪线编码", data.substring(76, 92)));
+
+        result.add(new ChargeFrameVo("SOC（待机置零；交流桩置零）", data.substring(72, 94)));
+        result.add(new ChargeFrameVo("电池组最高温度（待机置零；交流桩置零）", data.substring(94, 96)));
+
+        result.add(new ChargeFrameVo("累计充电时间", FrameParseUtil.bytesParseFor2(data.substring(96, 100))));
+        result.add(new ChargeFrameVo("剩余时间", data.substring(100, 104)));
+        result.add(new ChargeFrameVo("充电度数", FrameParseUtil.bytesParseFor4(data.substring(104, 112))));
+        result.add(new ChargeFrameVo("计损充电度数", FrameParseUtil.bytesParseFor4(data.substring(112, 120))));
+        result.add(new ChargeFrameVo("已充金额", data.substring(120, 128)));
+        result.add(new ChargeFrameVo("硬件故障", data.substring(128, 132)));
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        String data = "6840216f00130072502000690101250320232805000100725020006901010302015f083e015900000000000000000000280000008fb400008fb400008fb400000000e494";
+
+        MiaochongchongProtocolToolHelper miaochongchongProtocolToolHelper = new MiaochongchongProtocolToolHelper();
+
+        List<ChargeFrameVo> chargeFrameVos = miaochongchongProtocolToolHelper.parsePileRealtimeData(data);
+
+        System.out.println(chargeFrameVos);
     }
 
     /**
@@ -75,7 +140,7 @@ public class MiaochongchongProtocolToolHelper {
         // d303
 
         List<ChargeFrameVo> result = new ArrayList<>();
-        result.add(new ChargeFrameVo("帧类型", "交易记录"));
+        result.add(new ChargeFrameVo("帧类型", ChargeFrameEnum.TRADING_RECORD.getMessage()));
 
         result.add(new ChargeFrameVo("交易流水号", data.substring(12, 44)));
         result.add(new ChargeFrameVo("桩编号", data.substring(44, 58)));
