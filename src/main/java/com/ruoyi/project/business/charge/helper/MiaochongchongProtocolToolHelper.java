@@ -7,6 +7,7 @@ import com.ruoyi.project.business.charge.utils.FrameParseUtil;
 import com.ruoyi.project.business.charge.utils.DateUtil;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -70,14 +71,15 @@ public class MiaochongchongProtocolToolHelper {
 
         result.add(new ChargeFrameVo("输出电压", FrameParseUtil.bytesParseFor2(data.substring(66, 70))));
         result.add(new ChargeFrameVo("输出电流", FrameParseUtil.bytesParseFor2(data.substring(70, 74))));
-
-        result.add(new ChargeFrameVo("枪线温度", FrameParseUtil.bytesParseFor1(data.substring(74, 76))));
+        BigDecimal bigDecimal = FrameParseUtil.bytesParseFor1(data.substring(74, 76));
+        result.add(new ChargeFrameVo("枪线温度", BigDecimal.ZERO.compareTo(bigDecimal) == 0 ? "0" : bigDecimal.subtract(new BigDecimal(50)).toString()));
         result.add(new ChargeFrameVo("枪线编码", data.substring(76, 92)));
 
-        result.add(new ChargeFrameVo("SOC（待机置零；交流桩置零）", data.substring(72, 94)));
-        result.add(new ChargeFrameVo("电池组最高温度（待机置零；交流桩置零）", data.substring(94, 96)));
+        result.add(new ChargeFrameVo("SOC（待机置零；交流桩置零）", data.substring(92, 94)));
+        BigDecimal bigDecimal1 = FrameParseUtil.bytesParseFor1(data.substring(94, 96));
+        result.add(new ChargeFrameVo("电池组最高温度（待机置零；交流桩置零）", BigDecimal.ZERO.compareTo(bigDecimal1) == 0 ? "0" : bigDecimal1.subtract(new BigDecimal(50)).toString()));
 
-        result.add(new ChargeFrameVo("累计充电时间", FrameParseUtil.bytesParseFor2(data.substring(96, 100))));
+        result.add(new ChargeFrameVo("累计充电时间", FrameParseUtil.bytesParseFor2v2(data.substring(96, 100))));
         result.add(new ChargeFrameVo("剩余时间", data.substring(100, 104)));
         result.add(new ChargeFrameVo("充电度数", FrameParseUtil.bytesParseFor4(data.substring(104, 112))));
         result.add(new ChargeFrameVo("计损充电度数", FrameParseUtil.bytesParseFor4(data.substring(112, 120))));
