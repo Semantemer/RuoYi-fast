@@ -19,4 +19,5 @@ RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
 ENTRYPOINT ["java", \
             "-Djava.security.egd=file:/dev/./urandom", \
             "-Dserver.port=${SERVER_PORT}", \
+            "-Dspring.config.location=file:/home/ruoyi/application.yml,file:/home/ruoyi/application-druid.yml", \
             "-jar", "app.jar"]

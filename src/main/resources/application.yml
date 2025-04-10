@@ -153,3 +153,9 @@ gen:
   tablePrefix: business_,sys_
   # 是否允许生成文件覆盖到本地（自定义路径），默认不允许
   allowOverwrite: false
+
+# 自定义配置
+custom:
+  ytdlp:
+    callFilePath: D:\software\yt-dlp_win\ytdlp.exe
+    downloadOutputDir:  D:\downloads
