@@ -58,7 +58,7 @@ public class FrameParseUtil {
         byte[] data = HexConverterUtil.hexStringToByteArray(hexString);
 
         if (data.length != 1) {
-            throw new IllegalArgumentException("Invalid totalPower data length. Expected 2 bytes.");
+            throw new IllegalArgumentException("Invalid totalPower data length. Expected 1 bytes.");
         }
 
         // 提取毫秒值（前两个字节）

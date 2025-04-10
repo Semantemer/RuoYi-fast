@@ -27,13 +27,149 @@ public class MiaochongchongProtocolToolHelper {
 
         Integer frameType = Integer.parseInt(data.substring(10, 12), 16);
 
-        if(ChargeFrameEnum.TRADING_RECORD.getCode().equals(frameType)){
+        if(ChargeFrameEnum.PILE_AUTH.getCode().equals(frameType)){
+            return parsePileAuth(data);
+        }else if(ChargeFrameEnum.PILE_KEEP_ALIVE.getCode().equals(frameType)){
+            return parsePileKeepalive(data);
+        }else if(ChargeFrameEnum.PILE_BILLING_MODEL_CHECK.getCode().equals(frameType)){
+            return parsePileBillingModelCheck(data);
+        }else if(ChargeFrameEnum.PILE_BILLING_MODEL_GET.getCode().equals(frameType)){
+            return parsePileBillingModelGet(data);
+        }else if(ChargeFrameEnum.PILE_CHARGING_LINK.getCode().equals(frameType)){
+            return parsePileChargingLink(data);
+        }else if(ChargeFrameEnum.PILE_BMS_CONFIG.getCode().equals(frameType)){
+            return parsePileBmsConfig(data);
+        }else if(ChargeFrameEnum.PILE_CHARING_FINISH.getCode().equals(frameType)){
+            return parsePileCharingFinish(data);
+        }else if(ChargeFrameEnum.TRADING_RECORD.getCode().equals(frameType)){
             return parseTradingRecord(data);
         }else if(ChargeFrameEnum.PILE_REALTIME_DATA.getCode().equals(frameType)){
             return parsePileRealtimeData(data);
         }
 
         return null;
+    }
+
+    private List<ChargeFrameVo> parsePileCharingFinish(String data) {
+        List<ChargeFrameVo> result = new ArrayList<>();
+        result.add(new ChargeFrameVo("帧类型", ChargeFrameEnum.PILE_CHARING_FINISH.getMessage()));
+        result.add(new ChargeFrameVo("桩编号", data.substring(12, 26)));
+
+        return result;
+    }
+
+    private List<ChargeFrameVo> parsePileBmsConfig(String data) {
+        List<ChargeFrameVo> result = new ArrayList<>();
+        result.add(new ChargeFrameVo("帧类型", ChargeFrameEnum.PILE_BMS_CONFIG.getMessage()));
+        result.add(new ChargeFrameVo("桩编号", data.substring(12, 26)));
+
+        return result;
+    }
+
+    private List<ChargeFrameVo> parsePileChargingLink(String data) {
+
+        List<ChargeFrameVo> result = new ArrayList<>();
+        result.add(new ChargeFrameVo("帧类型", ChargeFrameEnum.PILE_CHARGING_LINK.getMessage()));
+        result.add(new ChargeFrameVo("桩编号", data.substring(12, 26)));
+
+        return result;
+    }
+
+    /**
+     * 计费模型验证请求(充电桩->运营平台)
+     *
+     * @param data
+     * @return
+     * 680b0200000900624100001201341b
+     * 685E0002000A00624100001201F002E8030000E8030000E8030000E8030000E8030000E8030000E8030000E803000000000000000000000000000000000001010101010101010101010101010101010101010202020202020202020203030303BF08
+     */
+    private List<ChargeFrameVo> parsePileBillingModelGet(String data) {
+
+        // 680b020000
+        // 09
+        // 00624100001201
+        // 341b
+
+        List<ChargeFrameVo> result = new ArrayList<>();
+        result.add(new ChargeFrameVo("帧类型", ChargeFrameEnum.PILE_BILLING_MODEL_GET.getMessage()));
+        result.add(new ChargeFrameVo("桩编号", data.substring(12, 26)));
+
+        return result;
+    }
+
+    private List<ChargeFrameVo> parsePileBillingModelCheck(String data) {
+
+        List<ChargeFrameVo> result = new ArrayList<>();
+        result.add(new ChargeFrameVo("帧类型", ChargeFrameEnum.PILE_BILLING_MODEL_CHECK.getMessage()));
+
+        return result;
+    }
+
+    /**
+     * 充电桩心跳包(充电桩->运营平台)
+     * @param data
+     * @return
+     * 680d0300000300624100001201010075fa
+     * 680D00030004006241000012010100C5E7
+     */
+    private List<ChargeFrameVo> parsePileKeepalive(String data) {
+
+        // 680d030000
+        // 03
+        // 00624100001201 : 桩编码
+        // 01 : 枪号
+        // 00 : 枪状态(0x00：正常 0x01：故障)
+        // 75fa
+
+        List<ChargeFrameVo> result = new ArrayList<>();
+        result.add(new ChargeFrameVo("帧类型", ChargeFrameEnum.PILE_KEEP_ALIVE.getMessage()));
+
+        result.add(new ChargeFrameVo("桩编号", data.substring(12, 26)));
+        result.add(new ChargeFrameVo("枪号", data.substring(26, 28)));
+        result.add(new ChargeFrameVo("枪状态(0x00：正常 0x01：故障)", data.substring(28, 30)));
+
+        return result;
+    }
+
+    /**
+     *  充电桩登录认证(充电桩->运营平台)
+     * @param data
+     * @return
+     * 682200000001006241000012010101103431325f342e353000898604861024c0006426003abc
+     * 680C0000000200624100001201009020
+     */
+    private List<ChargeFrameVo> parsePileAuth(String data) {
+
+        // 6822000000
+        // 01
+        // 00624100001201 : 桩编号
+        // 01 : 桩类型（0表示直流桩， 1表示交流桩）
+        // 01 : 枪编号
+        // 10 ： 通信协议版本（版本号乘 10，v1.0表示0x0A）
+        // 3431325f342e3530 ： 程序版本
+        // 00 ： 网络链接类型（0x00 SIM卡 0x01 LAN 0x02 WAN 0x03 其他）
+        // 898604861024c0006426 : Sim卡
+        // 00 : 运营商（0x00 移动 0x02 电信 0x03 联通 0x04 其他）
+        // 3abc
+
+        // 680C0000000200624100001201009020
+
+        List<ChargeFrameVo> result = new ArrayList<>();
+        result.add(new ChargeFrameVo("帧类型", ChargeFrameEnum.PILE_AUTH.getMessage()));
+
+        result.add(new ChargeFrameVo("桩编号", data.substring(12, 26)));
+        result.add(new ChargeFrameVo("桩类型（0表示直流桩， 1表示交流桩）", data.substring(26, 28)));
+        result.add(new ChargeFrameVo("枪数量", FrameParseUtil.bytesParseFor1(data.substring(28, 30)).toString()));
+
+        BigDecimal versionBigDecimal = FrameParseUtil.bytesParseFor1(data.substring(30, 32)).divide(new BigDecimal(10)).setScale(1, BigDecimal.ROUND_HALF_UP);
+        result.add(new ChargeFrameVo("通信协议版本（版本号乘 10，v1.0表示0x0A）", versionBigDecimal.toString()));
+        result.add(new ChargeFrameVo("程序版本", data.substring(32, 48)));
+        result.add(new ChargeFrameVo("网络链接类型（0x00 SIM卡 0x01 LAN 0x02 WAN 0x03 其他）", data.substring(48, 50)));
+
+        result.add(new ChargeFrameVo("Sim卡", data.substring(50, 70)));
+        result.add(new ChargeFrameVo("运营商（0x00 移动 0x02 电信 0x03 联通 0x04 其他）", data.substring(70, 72)));
+
+        return result;
     }
 
     private List<ChargeFrameVo> parsePileRealtimeData(String data) {
